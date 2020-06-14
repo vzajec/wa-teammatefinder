@@ -5,7 +5,13 @@
 <div class="appp">
 <div class=userinfo>
 <img id="avatar" src="../assets/pplaceholder.jpg"/>
-<center><span id="imekor">{{korisnik.korisnickoime}}</span></center>
+<center><span id="imek">{{this.kor}}</span></center>
+<div v-if="myp" class="editprof">
+<router-link :to="{name: 'ProfilP'}">
+      <button type="button" class="btn btn-outline-primary" >Uredi profil</button>
+        </router-link>
+</div>
+        
 </div>
 <div class=podaci>
 <a id="naslov">Podaci</a>
@@ -14,9 +20,9 @@
     Igra
   </button>
   <div class="dropdown-menu">
-    <a class="dropdown-item" @click="poddota()" href="#">Dota 2</a>
-    <a class="dropdown-item" @click="podcsgo()" href="#">CS:GO</a>
-    <a class="dropdown-item" @click="podlol()" href="#">League of legends</a>
+    <a class="dropdown-item" @click="poddota()" >Dota 2</a>
+    <a class="dropdown-item" @click="podcsgo()" >CS:GO</a>
+    <a class="dropdown-item" @click="podlol()" >League of legends</a>
   </div>
 </div>
 </div>
@@ -76,12 +82,12 @@
 <div class="row">
   
   <div class="col">
-     <li id="podaciid">Rank: {{ korisnik.lolrank }} </li>
-     <li id="podaciid">Id u igri:{{ korisnik.lolgameId}} </li>
+     <li id="podaciid">Rank: {{ profilpod.lolrank }} </li>
+     <li id="podaciid">Id u igri:{{ profilpod.lolgameId}} </li>
      
-     <li id="podaciid">Pozicija:{{ korisnik.lolpos }}</li>
+     <li id="podaciid">Pozicija:{{ profilpod.lolpos }}</li>
      
-     <li id="podaciid">Regija:{{korisnik.lolregija}}</li>
+     <li id="podaciid">Regija:{{profilpod.lolregija}}</li>
      
      <li id="podaciid">Trenutno u timu: <a v-if="loltim">DA</a><a v-else>NE</a></li>
      </div>
@@ -121,12 +127,14 @@
 </div>
 </div>
 </div>
+<div v-if="!myp">
 <form @submit.prevent="submitKomentar" class="form-inline mb-5">
             <div class="form-group">
               <input v-model="komentar" type="text" class="form-control" id="imageUrl" placeholder="Any comment?">
             </div>
             <button type="submit" class="btn btn-primary ml-2">Post</button>
           </form>
+</div>
 </div>
 </div>
 
@@ -138,12 +146,19 @@
 import navnside from '@/components/navnside.vue'
 import store from '@/store.js'
 import kompkomentari from '@/components/kompkomentari.vue'
+import { Auth, Profil } from '@/services'
 
 
 
 export default {
+  props: ['user'],
   data(){
-    return store
+    return { 
+      ...store,
+      auth: Auth.state,
+      kor: this.$route.params.id,
+      myp: false
+    }
   },
 
  
@@ -152,17 +167,15 @@ export default {
     kompkomentari
   },
  created(){
-        var kor = this.$route.params.imekorisnika 
-        let korisnik = db.collection("Korisnici").doc(kor)
-        korisnik.get().then((doc) =>{
-            this.korisnik = doc.data()
-            this.loltim = doc.data().loltim
-            this.dotatim = doc.data().dotatim
-            this.cgotim = doc.data().csgotim
-        })    
+
+  this.getprofile();
+  this.myprofile();
+   
     },
   mounted(){
-    var kor = this.$route.params.imekorisnika
+
+
+    
     db.collection('Korisnici').doc(kor).collection("komentari").get().then((querySnapshot)=> {
     querySnapshot.forEach((doc)=> {
          let komentari=doc.data()
@@ -179,6 +192,19 @@ export default {
     },
 
   methods:{
+    myprofile(){
+      if (this.auth.username==this.kor)
+      {
+       this.myp=true;
+      }
+
+    },
+
+async getprofile(){
+      this.profilpod = await Profil.profil(this.kor)
+
+    },
+
   poddota() {
           this.lolodabir = false;
           this.dotaodabir = true;
@@ -208,6 +234,9 @@ submitKomentar(){
 </script>
 
 <style>
+
+
+
 
 
 .koms{
@@ -273,9 +302,9 @@ width:100%;
   width: 75%;
 }
 
-#imekor{
+#imek{
 position: relative;
-font-size: 23px;
+font-size: 21px;
 color:white;
 }
 
@@ -303,6 +332,11 @@ font-size: 25px;
 color:white;
 font-weight: bold;
 }
+
+.editprof {
+margin-top: 2.5%;
+}
+
 
 .podaci{
 padding:10px;

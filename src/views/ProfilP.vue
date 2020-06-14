@@ -55,32 +55,22 @@
 
 <script>
 import Croppa from 'vue-croppa';
-import store from '@/store.js'
+import store from '@/store.js';
+import { PostaviP } from '@/services'
 export default {
   data () {
     return store
     
   },
   methods:{
-    submitkorisnickoime(){
-        db.collection("Korisnici").doc(this.userEmail).update({
-                      korisnickoime: this.korisnickoIme,
-                      dota: this.Dota,
-                      csgo: this.Csgo,
-                      lol: this.Lol,
-                      id: this.userEmail
-                    }).then(function() {
-                    console.log("Document successfully written!");
-                    })
-                    .catch(function(error) {
-                    console.error("Error writing document: ", error);
-                    });
-                    if (this.$route.name == 'ProfilP' && this.Dota==true)
-                    this.$router.push({name: 'ProfilDota'}).catch(err => console.log(err))
-                    else if (this.Csgo==true)
-                    this.$router.push({name: 'ProfilCsgo'}).catch(err => console.log(err))
-                    else if (this.Lol==true)
-                    this.$router.push({name: 'ProfilLol'}).catch(err => console.log(err))
+    async submitkorisnickoime(){
+      await PostaviP.pp(this.korisnickoIme, this.Dota, this.Csgo, this.Lol);
+      if (this.$route.name == 'ProfilP' && this.Dota==true)
+      this.$router.push({name: 'ProfilDota'}).catch(err => console.log(err))
+      else if (this.Csgo==true)
+      this.$router.push({name: 'ProfilCsgo'}).catch(err => console.log(err))
+      else if (this.Lol==true)
+      this.$router.push({name: 'ProfilLol'}).catch(err => console.log(err))
                   
 
     }

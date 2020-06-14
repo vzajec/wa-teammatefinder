@@ -19,7 +19,7 @@
  </span>
     </div>
 </div>
-<komptimdota></komptimdota>
+
 </div>
 </div>
 </template>

@@ -135,37 +135,46 @@ export default {
           let box = document.querySelector('.msg_history');
           box.scrollTop=box.scrollHeight;
         },
-        saveMessageDota() {
+        async saveMessageDota() {
                 
-                db.collection('chat').doc("dota").collection("messages").add({
+                let addmsg = {
                     message: this.messagedota,
                     author: this.authUser.email,
-                    createdAt: new Date()
-                }).then(()=>{
+                    createdAt: new Date(),
+                    game: "dota"
+                }
+                let newmsg = await Chat.add(addmsg)
+                .then(()=>{
                   this.scrollToBottom();
                 })
                 
                 this.messagedota=null;
         },
-        saveMessageCsgo() {
+       async saveMessageCsgo() {
                 
-                db.collection('chat').doc("csgo").collection("messages").add({
+               let addmsg = {
                     message: this.messagecsgo,
                     author: this.authUser.email,
-                    createdAt: new Date()
-                }).then(()=>{
+                    createdAt: new Date(),
+                    game: "csgo"
+                }
+                let newmsg = await Chat.add(addmsg)
+                .then(()=>{
                   this.scrollToBottom();
                 })
                 
                 this.messagecsgo=null;
         },
-        saveMessageLol() {
+       async saveMessageLol() {
                 
-                db.collection('chat').doc("lol").collection("messages").add({
+                let addmsg = {
                     message: this.messagelol,
                     author: this.authUser.email,
-                    createdAt: new Date()
-                }).then(()=>{
+                    createdAt: new Date(),
+                    game: "lol"
+                }
+                let newmsg = await Chat.add(addmsg)
+                .then(()=>{
                   this.scrollToBottom();
                 })
                 

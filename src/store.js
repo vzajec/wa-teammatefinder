@@ -1,7 +1,6 @@
 
 export default {
     authenticated: false,
-    userEmail: '',
     korisnickoIme:'',
     Dota: false,
     Csgo: false,
@@ -45,6 +44,8 @@ export default {
     dotaigraci: [],
     csgoigraci: [],
     loligraci: [],
-    filter: ['']
+    filter: [''],
+    pozivi: [],
+    profilpod:[],
 
 }

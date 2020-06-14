@@ -8,26 +8,16 @@
 
 <script type="text/javascript">
 import store from '@/store.js'
+import { Auth } from '@/services'
 export default {
   data () {
-    return store;
+  return {
+    ...store,
+    auth: Auth.state,
+  };
   },
   created () {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log("User is logged in with email " + user.email)
-        this.authenticated = true
-        this.userEmail = user.email
-        if (this.$route.name === 'Prijava')
-          this.$router.push({name: 'Igraci'}).catch(err => console.log(err))
-      }
-      else {
-        console.log("User is not logged in")
-        this.authenticated = false
-        if (this.$route.name !== 'Prijava')
-          this.$router.push({name: 'home'}).catch(err => console.log(err))
-      }
-    });
+    
     
     
   },

@@ -94,6 +94,7 @@ margin-left:5%;
 
 </style>
 <script>
+import { Auth } from '@/services'
 export default {
   data () {
     return {
@@ -101,13 +102,15 @@ export default {
       password: '',
     }
   },
-  //NAPRAVITI RUTU ZA NASLOVNICU
   methods: {
-    login () {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
-        console.log(error)
-      });
+    async login() {
+      let success = await Auth.login(this.email, this.password);
+      console.log('Rezultat prijave', success);
+
+      if (Auth.authenticated() == true) {
+ this.$router.push({ name: 'Igraci' });
+      }
     }
   }
-}
+};
 </script>

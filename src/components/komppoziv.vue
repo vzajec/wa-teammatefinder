@@ -1,15 +1,14 @@
 <template>
 <div>
-<div class="kartice" v-for="poziv in odabir" :key="poziv.id">
 <div class="pozivi">
     <div class="container">
    <div class="row" >
        <div class="col-lg-8">
   <div class="pozivuser"> 
           <img id="pozavatar" src="../assets/pplaceholder.jpg"/>
-          <a id="timkorime">{{poziv.od}}</a>
+          <a id="timkorime">{{poziv.from}}</a>
           <span id="timkorime">vas poziva u</span>
-           <span id="timkorime">{{poziv.igra}}</span>
+           <span id="timkorime">{{poziv.game}}</span>
            <span id="timkorime">tim</span>
   </div>
       </div>
@@ -22,7 +21,7 @@
 
 </div>
 </div>
-</div>
+
 </div>
 </template>
 
@@ -30,26 +29,19 @@
 
 <script>
 import store from '@/store.js'
+import { Pozivi } from '@/services'
 
 export default {
-
+props:['poziv'],
   data(){
     return store
   },
 
   created(){
-    db.collection("Korisnici").doc(this.userEmail).collection("pozivi").get().then((querySnapshot)=> {
-    querySnapshot.forEach((doc)=> {        
-         let poziv=doc.data()
-         poziv.id=doc.id;
-        this.Pozivi.push(poziv);
-    });
-});
+
   },
   computed:{
-      odabir() {
-      return this.Pozivi.filter(poziv => poziv.id);
-    }
+
     },
     methods: {
     prihvati(p){

@@ -11,7 +11,7 @@
   <div class="row">
     <div class="col"></div>
     <div class="col">
-      <form @submit.prevent="signup">
+      <form @submit.prevent="register">
             <div class="form-group">
               <a id="reg1">Email adresa</a>
               <input v-model="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Unesite e-mail adresu">
@@ -33,23 +33,23 @@
 </template>
 
 <script>
+import { Register } from '@/services'
 export default {
   data () {
     return {
       email: '',
       password: '',
       password2: '',
-      Grad: ''
+
     }
   },
   methods: {
-    signup () {
+    async register () {
       if (this.password === (this.password2) && this.password!="") {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(cred =>{
-         db.collection("Korisnici").doc(this.email).set({
-                      grad: this.Grad
-                    })
-      })
+      let success = await Register.register(this.email, this.password);
+      console.log('Rezultat registracije', success);
+      this.$router.push({ name: 'Prijava' });
+
     }
       else{
         console.log("passwords do not match&quot;");

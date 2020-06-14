@@ -5,8 +5,8 @@
     <div class="navbar-header fixed-brand">
     <img id="navlogo" src="../assets/logo.png">
        <div class=usernav>
-      <router-link to="/moj-profil"><img id="navavatar" src="../assets/pplaceholder.jpg"/>
-      <span id="korime">{{ korisnickoIme }}</span></router-link>
+      <div @click="gotoprofile(auth.username)"><img id="navavatar" src="../assets/pplaceholder.jpg"/>
+      <span id="korime">{{ auth.username }}</span></div>
       <div class="od">
       <a @click="logout" href="#" id=odjava>Odjava</a>
       </div>
@@ -46,25 +46,30 @@
 
 <script>
 import store from '@/store.js'
+import { Auth } from '@/services'
 export default {
   methods: {
     logout() {
-      firebase.auth().signOut()
-    }
+      Auth.logout();
+      this.$router.go();
+    },
+     gotoprofile(user) {
+       if (this.routename!='Profil'){
+            this.$router.push({path: `profil/${user}`});
+       }
+       else {
+         this.$router.push({path: `${user}`});
+       }
+        }
   },
 data(){
-return store
+return {
+  ...store,
+  auth: Auth.state,
+  routename: this.$route.name
+}
 },
-  mounted(){
-    db.collection("Korisnici").doc(this.userEmail).get().then(doc =>{
-        console.log("Document data:", doc.data());
-      this.korisnickoIme=doc.data().korisnickoime;
-      
-        
-}).catch(function(error) {
-    console.log("Error getting document:", error);
-});
-  }
+
 }
 </script>
 

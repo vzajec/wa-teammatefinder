@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import { Auth } from '@/services';
+
 
 Vue.use(VueRouter)
 
@@ -66,14 +68,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "ProfilP" */ '../views/ProfilP.vue')
   },
   {
-    path: '/profil',
+    path: '/profil/:id',
+    props: true,
     name: 'Profil',
-    component: () => import(/* webpackChunkName: "Profil" */ '../views/Profil.vue')
-  },
-  {
-    path: '/moj-profil',
-    name: 'Moj-profil',
-    component: () => import(/* webpackChunkName: "Moj-profil" */ '../views/Moj-profil.vue')
+    component: () => import(/* webpackChunkName: "Profil" */ '../views/Profil.vue'),
+
   },
   
 ]
@@ -83,5 +82,19 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+
+router.beforeEach((to, from, next) => {
+
+  const publicPages = ['/prijava', '/registracija', '/'];
+  const authRequired = !publicPages.includes(to.path);
+  const user = Auth.getUser();
+
+  if (authRequired && !user) {
+  next('/prijava');
+  return;
+  }
+  next();
+ });
 
 export default router
